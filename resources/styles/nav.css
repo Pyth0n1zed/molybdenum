@@ -101,6 +101,24 @@
     opacity: 0;
     transition: opacity 0.3s ease;
 }
+.btn {
+    top: 45px;
+    width: 34px;
+    height: 34px;
+    position: fixed;
+    z-index: 100;
+    border-radius: 100px;
+    opacity: 0.5;
+}
+#forward-btn {
+   left: 41px; 
+}
+#back-btn {
+   left: 5px; 
+}
+#refresh-btn {
+   left: 77px; 
+}
 .back-back {
     left: 5px;
     width: 34px;
@@ -313,7 +331,12 @@ future reference*/
     transition: transform 0.1s ease-out, opacity 0s ease-out;
 }
 
-
+#profile-btn {
+   right: 40px; 
+}
+#more-btn {
+   right: 3px; 
+}
 
 .profile {
   position: fixed;

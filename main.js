@@ -41,7 +41,7 @@ function addTab(url) {
     switchActive(tabs.length - 1);
     navigate(url);
 }
-function navigate(url, isForward) {
+function navigate(url, isForward, isRefresh) {
     let parsed = parseURL(url);
     if (!url) {
         return false;
@@ -65,9 +65,9 @@ function navigate(url, isForward) {
     }else if(parsed[0] === 2) {
         document.querySelector(`#frame-${activeTab.toString()}`).querySelector(".iframee").src = `${parsed[1]}`
     }
-    if (!nohistory && !isForward) {
+    if (!nohistory && !isForward && !isRefresh) {
 
-    }else if(!nohistory && isForward) {
+    }else if(!nohistory && isForward && !isRefresh) {
 
     }
 }
@@ -121,7 +121,7 @@ addTab("chrome://newtab");
 const sbar = document.querySelector("#bruh");
 if (sbar) {
     sbar.onblur = function() {
-        if (tabs[activeTab] && this.value === tabs[activeTab][0]) {
+        if ((tabs[activeTab] && this.value === tabs[activeTab][0]) || (tabs[activeTab] && this.value === parseURL(tabs[activeTab][0])[1])) {
             document.body.querySelector(".search").classList.add("no-outline");
         }
     }
