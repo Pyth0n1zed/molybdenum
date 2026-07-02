@@ -36,7 +36,7 @@ function addTab(url) {
     body.insertAdjacentHTML("beforeend", `<div class='frame' id='frame-${fart2}'></div>`);
     let p = parseURL(url);
     document.querySelector(`#frame-${fart2}`).insertAdjacentHTML("beforeend", 
-            "<iframe src='' style='display: block; border: none; width: 100%; height: 100vh;' class='iframee'>bruh</iframe>"
+            "<iframe src='' style='display: block; border: none; width: 100%;height:100%;' class='iframee'>bruh</iframe>"
     );
     switchActive(tabs.length - 1);
     const nohistorysave = nohistory;
@@ -69,7 +69,8 @@ function navigate(url, isForward, isBackward, isRefresh) {
             document.body.querySelector(".searchbar").value = tabs[activeTab][0];
         }
     }else{
-        document.body.querySelector(".searchbar").value = parseURL(tabs[activeTab][0])[1];
+        document.body.querySelector(".searchbar").value = ""
+        document.body.querySelector(".searchbar").placeholder = parseURL(tabs[activeTab][0])[1].replace("https://", "");
     }
     if (parsed[0] === 0) {
         document.querySelector(`#frame-${activeTab.toString()}`).querySelector(".iframee").src = `chrome/${parsed[1]}/index.html`;
@@ -82,6 +83,9 @@ function navigate(url, isForward, isBackward, isRefresh) {
         document.querySelector(`#frame-${activeTab.toString()}`).querySelector(".iframee").src = `${parsed[1]}`;
         tabs[activeTab][1] = parsed[1];
     }
+    if ((tabs[activeTab] && this.value === tabs[activeTab][0]) || (tabs[activeTab] && this.value === parseURL(tabs[activeTab][0])[1])) {
+            document.body.querySelector(".search").classList.add("no-outline");
+        }
 }
 function removeTab(pos) {
     if (pos < 0 || pos >= tabs.length){return}
@@ -143,8 +147,10 @@ if (sbar) {
         if ((tabs[activeTab] && this.value === tabs[activeTab][0]) || (tabs[activeTab] && this.value === parseURL(tabs[activeTab][0])[1])) {
             document.body.querySelector(".search").classList.add("no-outline");
         }
+        if (this.value.includes(".")) {this.placeholder=this.value.replace("https://","");this.value=""}
     }
     sbar.onfocus = function() {
+        if (this.placeholder.includes(".")) {this.value=`https://${this.placeholder}`}
         this.select();this.placeholder='';
         document.body.querySelector(".search").classList.remove("no-outline");
     }
