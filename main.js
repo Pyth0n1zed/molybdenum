@@ -20,9 +20,13 @@ async function insertsvg(path, container, id, classs){
         console.log("error inserting svg", err);
     }
 }
+// add placeholder for https:// navigation
+// create history + add setthing to enable history in chrome://settings
+// add https:// prefix to stuff that has a .
 const tabs = [
     //["chrome://newtab", "New Tab", null, [], []] // url, title, favicon, history, future (for forwards arrow button)
 ];
+let nohistory = false;
 let activeTab = 0;
 function addTab(url) {
     tabs.push([url, url, null, [], []]);
@@ -31,14 +35,42 @@ function addTab(url) {
     let fart2 = fart.toString();
     body.insertAdjacentHTML("beforeend", `<div class='frame' id='frame-${fart2}'></div>`);
     let p = parseURL(url);
-    if (p[0] === 0) {
-        document.querySelector(`#frame-${fart2}`).insertAdjacentHTML("beforeend", 
-            `<iframe src='chrome/${p[1]}/index.html' style='display: block; border: none; width: 100%; height: 100vh;'>bruh</iframe>`
-        );//todo: finish 
-    } 
-    switchActive(fart);
+    document.querySelector(`#frame-${fart2}`).insertAdjacentHTML("beforeend", 
+            "<iframe src='' style='display: block; border: none; width: 100%; height: 100vh;' class='iframee'>bruh</iframe>"
+    );
+    switchActive(tabs.length - 1);
+    navigate(url);
 }
+function navigate(url, isForward) {
+    let parsed = parseURL(url);
+    if (!url) {
+        return false;
+    }
+    tabs[activeTab][0] = url;
+    let r = parsed;
+    if (r[0] === 0) {
+        if (tabs[activeTab][0] === "chrome://newtab") {
+            document.body.querySelector(".searchbar").value = "";
+            document.body.querySelector(".searchbar").placeholder = "Ask Google or type a URL";
+        }else{
+            document.body.querySelector(".searchbar").value = tabs[activeTab][0];
+        }
+    }else{
+        document.body.querySelector(".searchbar").value = parseURL(tabs[activeTab][0])[1];
+    }
+    if (parsed[0] === 0) {
+        document.querySelector(`#frame-${activeTab.toString()}`).querySelector(".iframee").src = `chrome/${parsed[1]}/index.html`
+    }else if (parsed[0] === 1) {
+        document.querySelector(`#frame-${activeTab.toString()}`).querySelector(".iframee").src = `${parsed[1]}`
+    }else if(parsed[0] === 2) {
+        document.querySelector(`#frame-${activeTab.toString()}`).querySelector(".iframee").src = `${parsed[1]}`
+    }
+    if (!nohistory && !isForward) {
 
+    }else if(!nohistory && isForward) {
+
+    }
+}
 function removeTab(pos) {
     if (pos < 0 || pos >= tabs.length) return;
     tabs.splice(pos, 1);
@@ -48,6 +80,7 @@ function removeTab(pos) {
     if (activeTab < 0) {
         activeTab = 0;
     }
+    // todo: add delete the div or sometinhgf lodkwapodjAPOWIFjhoawejhp;owgijpo;ewi
 }
 function parseURL(url) {
     if (url.startsWith("chrome://")) {
@@ -69,27 +102,35 @@ function switchActive(val){
         frame.style.display = 'none';
     });
     document.body.querySelector(`#frame-${activeTab.toString()}`).style.display='inline';
-    document.body.querySelector(".searchbar").value = tabs[val][0];
-    document.body.querySelector(".search").classList.add("no-outline")
+    let r = parseURL(tabs[activeTab][0]);
+    if (r[0] === 0) {
+        if (tabs[activeTab][0] === "chrome://newtab") {
+            document.body.querySelector(".searchbar").value = "";
+            document.body.querySelector(".searchbar").placeholder = "Ask Google or type a URL";
+        }else{
+            document.body.querySelector(".searchbar").value = tabs[val][0];
+        }
+    }else{
+        document.body.querySelector(".searchbar").value = parseURL(tabs[val][0])[1];
+    }
+    document.body.querySelector(".search").classList.add("no-outline");
 }
 addTab("chrome://settings");
-switchActive(0);
 addTab("chrome://newtab");
-switchActive(1);
 
 const sbar = document.querySelector("#bruh");
 if (sbar) {
     sbar.onblur = function() {
         if (tabs[activeTab] && this.value === tabs[activeTab][0]) {
-            document.body.querySelector(".search").classList.add("no-outline")
+            document.body.querySelector(".search").classList.add("no-outline");
         }
     }
     sbar.onfocus = function() {
         this.select();this.placeholder='';
-        document.body.querySelector(".search").classList.remove("no-outline")
+        document.body.querySelector(".search").classList.remove("no-outline");
     }
 }else{
-    console.log("HELP ME")
+    console.log("HELP ME");
 }
 //insertsvg("resources/navback.svg", "#backdiv", "nav-back", "nav-icon");
 //insertsvg("resources/navback.svg", "#forwarddiv", "nav-forward", "nav-icon");
