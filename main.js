@@ -88,6 +88,7 @@ function removeTab(pos) {
             frame.id = `frame-${id - 1}`;
         }
     });
+    switchActive(pos-1);
 }
 function parseURL(url) {
     if (url.startsWith("chrome://")) {
