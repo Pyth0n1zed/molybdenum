@@ -5,6 +5,7 @@
 const tabs = [
     //["chrome://newtab", "New Tab", null, [], []] // url, title, favicon, history, future (for forwards arrow button)
 ];
+const sbar = document.querySelector("#bruh");
 const forwardStyle = document.createElement("style");
 forwardStyle.id = "forwardStyle";
 forwardStyle.textContent = `
@@ -194,13 +195,12 @@ function switchActive(val){
 addTab("chrome://settings");
 addTab("chrome://newtab");
 
-const sbar = document.querySelector("#bruh");
 if (sbar) {
     sbar.onblur = function() {
         if ((tabs[activeTab] && this.value === tabs[activeTab][0]) || (tabs[activeTab] && this.value === parseURL(tabs[activeTab][0])[1])) {
             document.body.querySelector(".search").classList.add("no-outline");
         }
-        //if (this.value.includes(".")) {this.placeholder=this.value.replace("https://","");this.value=""}
+        if (this.value.includes(".")) {this.placeholder=this.value.replace("https://","");this.value=""}
     }
     sbar.onfocus = function() {
         if (this.placeholder.includes(".")) {this.value=`https://${this.placeholder}`}
@@ -222,8 +222,8 @@ document.querySelector("#back-btn").addEventListener("click", function(){
 sbar.addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         event.preventDefault();
-        this.blur();
         navigate(this.value)
+        sbar.blur();
     }
 });
 //insertsvg("resources/navback.svg", "#backdiv", "nav-back", "nav-icon");
