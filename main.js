@@ -1,25 +1,4 @@
-async function insertsvg(path, container, id, classs){
-    try {
-        const file = await fetch(path);
-        const text = await file.text();
 
-        const cont = document.querySelector(container);
-        if (cont) {
-            cont.insertAdjacentHTML("beforeend", text);
-            const svg = cont.querySelector('svg');
-            if (svg && id) { 
-                svg.id = id;
-            }
-            if (svg && classs) {
-                svg.setAttribute('class', classs); //this just wont work without setattribute idk why smh
-            }
-        } else {
-            console.log("no container for svg");
-        }
-    } catch(err) {
-        console.log("error inserting svg", err);
-    }
-}
 // add placeholder for https:// navigation
 // create history + add setthing to enable history in chrome://settings
 // add https:// prefix to stuff that has a .
